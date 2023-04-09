@@ -1,0 +1,23 @@
+{
+    "name": "exequiellares/mock-api",
+    "description": "Magento 2 module to add mock api feature",
+    "type": "magento2-module",
+    "license": [],
+    "config": {
+        "sort-packages": true
+    },
+    "version": "0.0.1",
+    "require": {
+        "php": "~7.4.0||~8.1.0",
+        "magento/framework": "103.0.*"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "ExeLares\\MockApi\\": ""
+        }
+    }
+}
+
