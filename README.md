@@ -22,10 +22,13 @@ Stores > Configuration > Advanced > Developer > Mock API
 ### Options
 
 * Enabled
+* Enable Log
 * Validate Token
 * Token
 * GET display request on response
 * POST display request on response
+* Validate Request Fields
+* Fields to Validate
 
 ## Example usage:
 
@@ -78,6 +81,10 @@ curl --location 'https://local.magento2.com/mock_erp_api?XDEBUG_SESSION_START=PH
     }
 }'
 ```
+
+## Logger
+
+Received request are logged into: var/log/mock_api.log
 
 ## TODO
 

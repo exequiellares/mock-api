@@ -5,10 +5,13 @@
         <mockapi>
             <general>
                 <enabled>1</enabled>
+                <enable_log>1</enable_log>
                 <validate_token>1</validate_token>
                 <token>alakd123kljm123</token>
                 <get_display_request>1</get_display_request>
                 <post_display_request>1</post_display_request>
+                <validate_fields>0</validate_fields>
+                <fields_to_validate></fields_to_validate>
             </general>
         </mockapi>
     </default>

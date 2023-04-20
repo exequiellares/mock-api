@@ -10,8 +10,16 @@
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>mockapi/general/enabled</config_path>
                 </field>
-                <!-- add input text fioeld -->
-                <field id="validate_token" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="enable_log" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Log</label>
+                    <comment>Enable log request body to var/log/mock_api.log</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>mockapi/general/enable_log</config_path>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="validate_token" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Validate Token</label>
                     <comment>Enable bearer token validation</comment>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
@@ -20,14 +28,14 @@
                         <field id="enabled">1</field>
                     </depends>
                 </field>
-                <field id="token" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="token" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Token</label>
                     <config_path>mockapi/general/token</config_path>
                     <depends>
                         <field id="validate_token">1</field>
                     </depends>
                 </field>
-                <field id="get_display_request" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="get_display_request" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>GET Display request on Response</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>mockapi/general/get_display_request</config_path>
@@ -35,12 +43,28 @@
                         <field id="enabled">1</field>
                     </depends>
                 </field>
-                <field id="post_display_request" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="post_display_request" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>POST Display request on Response</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                     <config_path>mockapi/general/post_display_request</config_path>
                     <depends>
                         <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="validate_fields" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Validate Request Fields</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>mockapi/general/validate_fields</config_path>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="fields_to_validate" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Fields to Validate</label>
+                    <config_path>mockapi/general/fields_to_validate</config_path>
+                    <comment>Fields that must have the body. Separated by comma. Example: id,increment_id</comment>
+                    <depends>
+                        <field id="validate_fields">1</field>
                     </depends>
                 </field>
             </group>

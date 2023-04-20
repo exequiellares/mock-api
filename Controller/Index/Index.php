@@ -17,14 +17,21 @@ use Psr\Log\LoggerInterface;
 class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionInterface
 {
     /**
-     * @var
+     * @var null|string
      */
-    private $token;
+    private ?string $token = null;
+
+    /**
+     * @var array
+     */
+    private $errorFields = [];
 
     /**
      * @param RequestInterface $request
      * @param JsonFactory $jsonFactory
      * @param ForwardFactory $forwardFactory
+     * @param Config $config
+     * @param LoggerInterface $logger
      */
     public function __construct(
         private RequestInterface $request,
@@ -49,8 +56,15 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
                 }
             }
 
-            // Log request
-            $this->logger->info(print_r($this->getJSONRequestBody(), true));
+            if ($this->config->isLogEnabled()) {
+                $this->logger->info(print_r($this->getJSONRequestBody(), true));
+            }
+
+            if ($this->config->isFieldsValidationEnabled()) {
+                if (!$this->validateJsonRequest()) {
+                    return $this->getNotValidFieldResponse();
+                }
+            }
 
             if ($this->request->isGet()) {
                 return $this->getGetResponse();
@@ -91,9 +105,36 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
 
     }
 
+    /**
+     * @return array
+     */
     private function getJSONRequestBody(): array
     {
-        return json_decode($this->request->getContent(), true);
+        return !empty($this->request->getContent()) ? json_decode($this->request->getContent(), true): [];
+    }
+
+    /**
+     * @return bool
+     */
+    private function validateJsonRequest(): bool
+    {
+        if (!$this->config->isFieldsValidationEnabled()) return true;
+
+        $body = $this->getJSONRequestBody();
+        $bodyKeys = array_keys($body);
+        $requiredFields = $this->config->getFieldsToValidate();
+        $this->errorFields = [];
+        $validFields = [];
+        foreach (array_keys($body) as $id) {
+            if (in_array($id, $requiredFields)) {
+                $validFields[] = $id;
+            }
+        }
+        $this->errorFields = array_diff($requiredFields, $validFields);
+        if (!empty($this->errorFields)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -141,13 +182,24 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
     private function getNotAuthorizedResponse()
     {
         $result = $this->jsonFactory->create();
-        $jsonBody = json_decode($this->request->getContent(), true);
         $responseData = [
             'status' => 'Error',
             'message' => 'Not Authorized. Invalid Token',
         ];
 
         $result->setData($responseData)->setHttpResponseCode(403);
+        return $result;
+    }
+
+    private function getNotValidFieldResponse()
+    {
+        $result = $this->jsonFactory->create();
+        $responseData = [
+            'status' => 'Error',
+            'message' => 'Missing fields: ' . join(', ', $this->errorFields),
+        ];
+
+        $result->setData($responseData)->setHttpResponseCode(400);
         return $result;
     }
 
