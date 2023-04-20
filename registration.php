@@ -6,4 +6,4 @@
 
 use Magento\Framework\Component\ComponentRegistrar;
 
-ComponentRegistrar::register(ComponentRegistrar::MODULE, 'ExeLares_MockApi', __DIR__);
+ComponentRegistrar::register(ComponentRegistrar::MODULE, 'ExequielLares_MockApi', __DIR__);

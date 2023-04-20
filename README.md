@@ -6,8 +6,8 @@ This is useful to test new features that requires external API connections.
 
 The module adds two public controllers:
 
-* mock-api/test-post
-* mock-api/test-get
+* mockapi/post
+* mockapi/get
 
 The controller response should return JSON data that will be configurable.
 
