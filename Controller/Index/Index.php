@@ -8,7 +8,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\Result\ForwardFactory;
-
+use ExequielLares\MockApi\Model\Config;
 
 /**
  *
@@ -28,7 +28,8 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
     public function __construct(
         private RequestInterface $request,
         private JsonFactory $jsonFactory,
-        private ForwardFactory $forwardFactory
+        private ForwardFactory $forwardFactory,
+        private Config $config
     )
     {
     }
@@ -38,17 +39,22 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
      */
     public function execute()
     {
-        if (!$this->validateToken()) {
-            return $this->getNotAuthorizedResponse();
-        }
-        if ($this->request->isGet()) {
-            return $this->getGetResponse();
-        }
-        if ($this->request->isPost())
-        {
-            return $this->getPostResponse();
-        }
         $forward = $this->forwardFactory->create();
+        if ($this->config->isEnabled()) {
+            if ($this->config->isTokenValidationEnabled()) {
+                if (!$this->validateToken()) {
+                    return $this->getNotAuthorizedResponse();
+                }
+            }
+
+            if ($this->request->isGet()) {
+                return $this->getGetResponse();
+            }
+            if ($this->request->isPost())
+            {
+                return $this->getPostResponse();
+            }
+        }
         return $forward->forward('no-route');
 
     }
@@ -58,7 +64,7 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
      */
     private function validateToken()
     {
-        $checkToken = null;
+        $checkToken = $this->config->isTokenValidationEnabled() ? $this->config->getBearerToken() : null;
         if ($checkToken !== null) {
             return $this->getBearerToken() === $checkToken;
         }
@@ -80,6 +86,11 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
 
     }
 
+    private function getJSONRequestBody(): array
+    {
+        return json_decode($this->request->getContent(), true);
+    }
+
     /**
      * @return \Magento\Framework\Controller\Result\Json
      */
@@ -91,6 +102,10 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
             'type' => 'GET',
             'message' => 'Success',
         ];
+
+        if ($this->config->isShowRequestOnGetResponseEnabled()) {
+            $responseData['request'] = $this->getJSONRequestBody();
+        }
         $result->setData($responseData);
         return $result;
     }
@@ -101,13 +116,15 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
     private function getPostResponse()
     {
         $result = $this->jsonFactory->create();
-        $jsonBody = json_decode($this->request->getContent(), true);
         $responseData = [
             'success' => true,
             'type' => 'POST',
             'message' => 'Success',
-            'request' => $jsonBody,
         ];
+
+        if ($this->config->isShowRequestOnPostResponseEnabled()) {
+            $responseData['request'] = $this->getJSONRequestBody();
+        }
 
         $result->setData($responseData);
         return $result;
