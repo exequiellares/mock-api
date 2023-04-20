@@ -3,4 +3,19 @@
     <type name="Magento\Framework\App\Request\CsrfValidator">
         <plugin name="mockapi_cancel_csrf_validation" type="ExequielLares\MockApi\Plugin\RequestValidator\CancelCsrfValidation"/>
     </type>
+
+    <virtualType name="ExequielLares\MockApi\Virtual\Logger\MockApiLogger" type="Magento\Framework\Logger\Monolog">
+        <arguments>
+            <argument name="name" xsi:type="string">mockapi_logger</argument>
+            <argument name="handlers"  xsi:type="array">
+                <item name="default" xsi:type="object">ExequielLares\MockApi\Logger\Handler\MockApiLogger</item>
+            </argument>
+        </arguments>
+    </virtualType>
+
+    <type name="ExequielLares\MockApi\Controller\Index\Index">
+        <arguments>
+            <argument name="logger" xsi:type="object">ExequielLares\MockApi\Virtual\Logger\MockApiLogger</argument>
+        </arguments>
+    </type>
 </config>

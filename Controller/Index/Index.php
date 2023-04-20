@@ -9,6 +9,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\Result\ForwardFactory;
 use ExequielLares\MockApi\Model\Config;
+use Psr\Log\LoggerInterface;
 
 /**
  *
@@ -29,7 +30,8 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
         private RequestInterface $request,
         private JsonFactory $jsonFactory,
         private ForwardFactory $forwardFactory,
-        private Config $config
+        private Config $config,
+        private LoggerInterface $logger
     )
     {
     }
@@ -46,6 +48,9 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
                     return $this->getNotAuthorizedResponse();
                 }
             }
+
+            // Log request
+            $this->logger->info(print_r($this->getJSONRequestBody(), true));
 
             if ($this->request->isGet()) {
                 return $this->getGetResponse();
