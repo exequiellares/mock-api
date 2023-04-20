@@ -11,7 +11,11 @@ The module adds two public controllers:
 
 The controller response should return JSON data that will be configurable.
 
-The controller request should receive a Bearer token to validate the request. This token could be any string or could be configurable.
+The controller request should receive a Bearer token to validate the request. The token is configurable.
+
+The module allow to define a set of fields that the body must have in order to validate request and simulate Bad Request responses.
+
+Allow to log into custom file received request.
 
 ## Settings
 

@@ -2,11 +2,19 @@
     "name": "exequiellares/mock-api",
     "description": "Magento 2 module to add mock api feature",
     "type": "magento2-module",
-    "license": [],
+    "authors": [
+        {
+            "name": "Exequiel Lares",
+        }
+    ],
+    "license": [
+        "GPL-3.0-or-later"
+    ],
+    "minimum-stability": "dev",
     "config": {
         "sort-packages": true
     },
-    "version": "0.0.1",
+    "version": "1.0.0",
     "require": {
         "php": "~7.4.0||~8.1.0",
         "magento/framework": "103.0.*"
