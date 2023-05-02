@@ -17,22 +17,30 @@ The module allow to define a set of fields that the body must have in order to v
 
 Allow to log into custom file received request.
 
+## Install
+
+```
+composer require exequiellares/magento2-mock-api
+php bin/magento module:enable ExequielLares_MockApi
+php bin/magento setup:upgrade
+```
+
 ## Settings
 
-Module configuration is available at:
+The module configuration is available at:
 
 Stores > Configuration > Advanced > Developer > Mock API
 
 ### Options
 
-* Enabled
-* Enable Log
-* Validate Token
-* Token
-* GET display request on response
-* POST display request on response
-* Validate Request Fields
-* Fields to Validate
+* **Enabled**: enable or disable the module
+* **Enable Log**: enable or disable the log of received requests
+* **Validate Token**: enable or disable the validation of the token. If disabled, the token will be ignored.
+* **Token**: Token to validate the request. If empty, the token will be ignored.
+* **GET display request on response**: If enabled, the GET request will return the request body on the response.
+* **POST display request on response**: If enabled, the POST request will return the request body on the response.
+* **Validate Request Fields**: If enabled, the request body will be validated against the fields defined on the next option.
+* **Fields to Validate**: List of fields to validate. The fields must be separated by a comma. Example: id,currency,discount,total,shipping,name,address,city,state,postcode,country,amount,method
 
 ## Example usage:
 
@@ -90,8 +98,8 @@ curl --location 'https://local.magento2.com/mock_erp_api?XDEBUG_SESSION_START=PH
 
 Received request are logged into: var/log/mock_api.log
 
-## TODO
+## Next features
 
 * Allow to configure body response on GET request
 * Allow to configure body response on POST request
-* Allow to configure unauthorized error message
+* Allow to configure error messages
