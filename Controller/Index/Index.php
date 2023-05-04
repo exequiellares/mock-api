@@ -121,9 +121,7 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
         if (!$this->config->isFieldsValidationEnabled()) return true;
 
         $body = $this->getJSONRequestBody();
-        $bodyKeys = array_keys($body);
         $requiredFields = $this->config->getFieldsToValidate();
-        $this->errorFields = [];
         $validFields = [];
         foreach (array_keys($body) as $id) {
             if (in_array($id, $requiredFields)) {
@@ -165,11 +163,16 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
         $responseData = [
             'success' => true,
             'type' => 'POST',
-            'message' => 'Success',
+            'message' => $this->config->getSuccessMessage() ?? 'Success',
         ];
 
         if ($this->config->isShowRequestOnPostResponseEnabled()) {
             $responseData['request'] = $this->getJSONRequestBody();
+        }
+
+        if ($this->config->isErrorForcedEnabled()) {
+            $responseData['success'] = false;
+            $responseData['message'] = $this->config->getErrorMessage() ?? 'An error ocurred';
         }
 
         $result->setData($responseData);

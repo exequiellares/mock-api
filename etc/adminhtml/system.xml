@@ -32,7 +32,7 @@
                     <label>Token</label>
                     <config_path>mockapi/general/token</config_path>
                     <depends>
-                        <field id="validate_token">1</field>
+                        <field id="enabled">1</field>
                     </depends>
                 </field>
                 <field id="get_display_request" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
@@ -65,6 +65,28 @@
                     <comment>Fields that must have the body. Separated by comma. Example: id,increment_id</comment>
                     <depends>
                         <field id="validate_fields">1</field>
+                    </depends>
+                </field>
+                <field id="enable_error" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Force Error Response</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>mockapi/general/enable_error</config_path>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="error_message" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Error Message</label>
+                    <config_path>mockapi/general/error_message</config_path>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="success_message" translate="label" type="text" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Success Message</label>
+                    <config_path>mockapi/general/success_message</config_path>
+                    <depends>
+                        <field id="enabled">1</field>
                     </depends>
                 </field>
             </group>

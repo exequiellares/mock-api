@@ -41,6 +41,9 @@ Stores > Configuration > Advanced > Developer > Mock API
 * **POST display request on response**: If enabled, the POST request will return the request body on the response.
 * **Validate Request Fields**: If enabled, the request body will be validated against the fields defined on the next option.
 * **Fields to Validate**: List of fields to validate. The fields must be separated by a comma. Example: id,currency,discount,total,shipping,name,address,city,state,postcode,country,amount,method
+* **Force Error Response**: If enabled, the response will be an error response.
+* **Error Message**: Error message to return on the response. If empty, the default message will be used.
+* **Success Message**: Success message to return on the response. If empty, the default message will be used.
 
 ## Example usage:
 
@@ -102,4 +105,3 @@ Received request are logged into: var/log/mock_api.log
 
 * Allow to configure body response on GET request
 * Allow to configure body response on POST request
-* Allow to configure error messages
