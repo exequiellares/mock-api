@@ -6,13 +6,17 @@ use Magento\Framework\App\ActionInterface;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Forward;
+use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Controller\Result\ForwardFactory;
 use ExequielLares\MockApi\Model\Config;
+use Magento\Framework\Controller\ResultInterface;
 use Psr\Log\LoggerInterface;
 
 /**
- *
+ * Class Index
  */
 class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionInterface
 {
@@ -25,6 +29,26 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
      * @var array
      */
     private $errorFields = [];
+    /**
+     * @var RequestInterface
+     */
+    private RequestInterface $request;
+    /**
+     * @var JsonFactory
+     */
+    private JsonFactory $jsonFactory;
+    /**
+     * @var ForwardFactory
+     */
+    private ForwardFactory $forwardFactory;
+    /**
+     * @var Config
+     */
+    private Config $config;
+    /**
+     * @var LoggerInterface
+     */
+    private LoggerInterface $logger;
 
     /**
      * @param RequestInterface $request
@@ -34,17 +58,22 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
      * @param LoggerInterface $logger
      */
     public function __construct(
-        private RequestInterface $request,
-        private JsonFactory $jsonFactory,
-        private ForwardFactory $forwardFactory,
-        private Config $config,
-        private LoggerInterface $logger
+        RequestInterface $request,
+        JsonFactory $jsonFactory,
+        ForwardFactory $forwardFactory,
+        Config $config,
+        LoggerInterface $logger
     )
     {
+        $this->logger = $logger;
+        $this->config = $config;
+        $this->forwardFactory = $forwardFactory;
+        $this->jsonFactory = $jsonFactory;
+        $this->request = $request;
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Forward|\Magento\Framework\Controller\Result\Json|\Magento\Framework\Controller\ResultInterface
+     * @return ResponseInterface|Forward|Json|ResultInterface
      */
     public function execute()
     {
@@ -110,7 +139,7 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
      */
     private function getJSONRequestBody(): array
     {
-        return !empty($this->request->getContent()) ? json_decode($this->request->getContent(), true): [];
+        return !empty($this->request->getContent()) ? \json_decode($this->request->getContent(), true): [];
     }
 
     /**
@@ -136,7 +165,7 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
     }
 
     /**
-     * @return \Magento\Framework\Controller\Result\Json
+     * @return Json
      */
     private function getGetResponse()
     {
@@ -155,7 +184,7 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
     }
 
     /**
-     * @return \Magento\Framework\Controller\Result\Json
+     * @return Json
      */
     private function getPostResponse()
     {
@@ -180,7 +209,7 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
     }
 
     /**
-     * @return \Magento\Framework\Controller\Result\Json
+     * @return Json
      */
     private function getNotAuthorizedResponse()
     {
@@ -194,6 +223,9 @@ class Index implements ActionInterface, HttpGetActionInterface, HttpPostActionIn
         return $result;
     }
 
+    /**
+     * @return Json
+     */
     private function getNotValidFieldResponse()
     {
         $result = $this->jsonFactory->create();

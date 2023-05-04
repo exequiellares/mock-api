@@ -6,7 +6,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 
 /**
- *
+ * Class Config
  */
 class Config
 {
@@ -24,11 +24,17 @@ class Config
     const CONFIG_PATH_SUCCESS_MESSAGE = 'mockapi/general/success_message';
 
     /**
+     * @var ScopeConfigInterface
+     */
+    private ScopeConfigInterface $scopeConfig;
+
+    /**
      * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        private ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig
     ) {
+        $this->scopeConfig = $scopeConfig;
 
     }
 
